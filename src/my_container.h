@@ -1,0 +1,4 @@
+#ifndef MY_CONTAINER_H
+#define MY_CONTAINER_H
+
+#endif // MY_CONTAINER_H

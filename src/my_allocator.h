@@ -1,0 +1,4 @@
+#ifndef MY_ALLOCATOR_H
+#define MY_ALLOCATOR_H
+
+#endif // MY_ALLOCATOR_H
