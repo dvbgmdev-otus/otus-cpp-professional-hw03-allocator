@@ -29,10 +29,6 @@ source "$LIB_DIR/docker.sh"
 TEST_BINARY_PATH="$BUILD_DIR/${PROJECT_NAME}_gtest"
 CTEST_FILE_PATH="$BUILD_DIR/CTestTestfile.cmake"
 
-is_inside_docker() {
-    [[ -f /.dockerenv ]]
-}
-
 ensure_test_build() {
     if [[ -x "$TEST_BINARY_PATH" && -f "$CTEST_FILE_PATH" ]]; then
         log_info "Test artifacts found: $TEST_BINARY_PATH" "$LOG_INDENT"

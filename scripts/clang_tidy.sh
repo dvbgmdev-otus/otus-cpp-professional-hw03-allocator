@@ -57,11 +57,6 @@ source "$LIB_DIR/logging.sh"
 # shellcheck disable=SC1091
 source "$LIB_DIR/docker.sh"
 
-# Проверка где выполняется скрипт (внутри контейнера или на хосте)
-is_inside_docker() {
-    [[ -f /.dockerenv ]]
-}
-
 # ---- Установка конфигурации ----
 set_config() {
     # Режим clang-tidy:

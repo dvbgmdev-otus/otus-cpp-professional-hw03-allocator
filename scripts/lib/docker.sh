@@ -34,6 +34,11 @@ if [[ -z "${__DOCKER_SH_INCLUDED:-}" ]]; then
     # shellcheck disable=SC1091
     source "$LIB_DIR/logging.sh"
 
+    # Проверка где выполняется скрипт (внутри контейнера или на хосте)
+    is_inside_docker() {
+        [[ -f /.dockerenv ]]
+    }
+
     # Проверяет доступность Docker окружения, при необходимости пытается его запустить (только на macOS)
     ensure_docker() {
         "$SHELL_DIR/ensure_docker.sh"
@@ -45,8 +50,6 @@ if [[ -z "${__DOCKER_SH_INCLUDED:-}" ]]; then
     }
 
     # Запускает команду внутри Docker контейнера
-    # Контракт:
-    #   - Если скрипт выполняется внутри Docker контейнера → выполняет команду напрямую
     docker_run() {
         ensure_docker
         ensure_image
@@ -77,6 +80,7 @@ if [[ -z "${__DOCKER_SH_INCLUDED:-}" ]]; then
             -w /app
         )
 
+        local cmd_str
         printf -v cmd_str "%q " "$@"
         log_debug "Command: docker run ${docker_args[*]} $IMAGE_NAME $cmd_str" "$LOG_SUBINDENT"
 

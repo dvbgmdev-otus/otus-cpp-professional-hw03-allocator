@@ -28,10 +28,6 @@ source "$LIB_DIR/docker.sh"
 
 readonly BIN_PATH="$BUILD_DIR/$PROJECT_NAME" # предполагаем, что бинарник будет в build/ и называться как проект
 
-is_inside_docker() {
-    [[ -f /.dockerenv ]]
-}
-
 ensure_build() {
     if [[ -x "$BIN_PATH" ]]; then
         log_info "Binary found: $BIN_PATH" "$LOG_INDENT"
