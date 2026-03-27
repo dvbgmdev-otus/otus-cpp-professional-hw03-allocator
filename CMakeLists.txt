@@ -5,6 +5,7 @@ set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 project(otus_allocator VERSION 0.0.${PATCH_VERSION})
 
 add_library(${PROJECT_NAME}_lib
+    src/app.cpp
     src/my_container.cpp
     src/utils.cpp
 )
