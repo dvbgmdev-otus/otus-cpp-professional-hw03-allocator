@@ -7,8 +7,10 @@
 
 int factorial(int value);
 
-template <typename MapType>
-void printMap(const MapType& map, std::ostream& os, const std::string& title = "") {
+template <typename Key, typename Value, typename Compare, typename Allocator>
+void printMap(const std::map<Key, Value, Compare, Allocator>& map,
+              std::ostream& os,
+              const std::string& title = "") {
     if (!title.empty()) {
         os << title << '\n';
     }
