@@ -16,9 +16,7 @@ int main() {
     }
 
     // вывод содержимого map
-    for (const auto& [key, value] : myMap) {
-        std::cout << key << " " << value << std::endl;
-    }
+    printMap(myMap, std::cout, "Factorials from 0 to 9:");
 
     return 0;
 }
