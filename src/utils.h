@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <chrono>
 #include <cstddef>
 #include <map>
 #include <ostream>
@@ -22,6 +23,26 @@ std::map<Key, Value, Compare, Allocator> createFactorialMap(
                                                   // переполнения int при больших значениях i
     }
     return result;
+}
+
+// Функция для измерения времени создания std::map с факториалами от 0 до itemCount - 1
+template <typename Key,
+          typename Value,
+          typename Compare = std::less<Key>,
+          typename Allocator = std::allocator<std::pair<const Key, Value>>>
+std::chrono::nanoseconds measureFactorialMapCreationTime(std::size_t itemCount,
+                                                         std::size_t repeatCount,
+                                                         const Allocator& allocator = Allocator()) {
+    std::size_t checksum = 0;
+    const auto start = std::chrono::steady_clock::now();
+    for (std::size_t i = 0; i < repeatCount; ++i) {
+        const auto tempMap =
+            createFactorialMap<Key, Value, Compare, Allocator>(itemCount, allocator);
+        checksum += tempMap.size();  // Используем размер map для предотвращения оптимизации
+    }
+    const auto end = std::chrono::steady_clock::now();
+    (void)checksum;  // чтобы избежать предупреждения о неиспользуемой переменной
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 }
 
 // Функция для печати содержимого std::map
