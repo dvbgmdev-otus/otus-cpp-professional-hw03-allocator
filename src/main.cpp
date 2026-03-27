@@ -1,16 +1,14 @@
 #include <iostream>
 #include "my_allocator.h"
-#include <vector>
+#include <list>
 
 int main() {
     std::cout << "Hello, MyAllocator!" << std::endl;
 
-    std::vector<int, MyAllocator<int>> vec;
-    vec.push_back(1);
-    vec.push_back(2);
-    vec.push_back(3);
+    std::list<int, MyAllocator<int>> list;
+    list.push_back(1);
 
-    for (const auto& val : vec) {
+    for (const auto& val : list) {
         std::cout << val << " ";
     }
     std::cout << std::endl;

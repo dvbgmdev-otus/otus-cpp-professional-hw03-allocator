@@ -19,10 +19,10 @@ public:
 };
 
 template <typename T, typename U>
-bool operator==(const MyAllocator<T>&, const MyAllocator<U>&);
+bool operator==(const MyAllocator<T>&, const MyAllocator<U>&) noexcept;
 
 template <typename T, typename U>
-bool operator!=(const MyAllocator<T>&, const MyAllocator<U>&);
+bool operator!=(const MyAllocator<T>&, const MyAllocator<U>&) noexcept;
 
 #include "my_allocator.tpp"
 
