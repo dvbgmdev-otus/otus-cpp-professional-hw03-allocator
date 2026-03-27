@@ -25,7 +25,7 @@ std::map<Key, Value, Compare, Allocator> createFactorialMap(
     return result;
 }
 
-// Функция для измерения времени создания std::map с факториалами от 0 до itemCount - 1
+// Функция для измерения времени создания N=repeatCount std::map с факториалами
 template <typename Key,
           typename Value,
           typename Compare = std::less<Key>,

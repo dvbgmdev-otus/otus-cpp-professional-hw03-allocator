@@ -1,4 +1,3 @@
-#include <chrono>
 #include <cstddef>
 #include <iostream>
 
@@ -8,15 +7,24 @@
 int main() {
     std::cout << "Hello, MyAllocator!" << std::endl;
 
-    const auto myMap = createFactorialMap<int, int>(10);
-    printMap(myMap, std::cout, "Factorials from 0 to 9:");
+    using MyMapAllocator = MyAllocator<std::pair<const int, int>>;
+
+    const auto stdMap = createFactorialMap<int, int>(10);
+    printMap(stdMap, std::cout, "Map with std::allocator:");
+
+    const auto myAllocMap = createFactorialMap<int, int, std::less<int>, MyMapAllocator>(10);
+    printMap(myAllocMap, std::cout, "Map with MyAllocator:");
 
     constexpr std::size_t repeatCount = 10000;
     constexpr std::size_t itemCount = 100;
 
-    const auto elapsed = measureFactorialMapCreationTime<int, int>(itemCount, repeatCount);
+    const auto stdMapElapsed = measureFactorialMapCreationTime<int, int>(itemCount, repeatCount);
+    std::cout << "std::allocator average time: " << stdMapElapsed.count() / repeatCount << " ns\n";
 
-    std::cout << "Average time: " << elapsed.count() / repeatCount << " ns\n";
+    const auto myAllocMapElapsed =
+        measureFactorialMapCreationTime<int, int, std::less<int>, MyMapAllocator>(itemCount,
+                                                                                  repeatCount);
+    std::cout << "MyAllocator average time: " << myAllocMapElapsed.count() / repeatCount << " ns\n";
 
     return 0;
 }

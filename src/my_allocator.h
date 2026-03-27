@@ -15,7 +15,7 @@ public:
 
     T* allocate(std::size_t n);
 
-    void deallocate(T* p, std::size_t);
+    void deallocate(T* p, std::size_t n);
 };
 
 template <typename T, typename U>
