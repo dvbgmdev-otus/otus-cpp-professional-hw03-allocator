@@ -6,6 +6,7 @@ project(otus_allocator VERSION 0.0.${PATCH_VERSION})
 
 add_library(${PROJECT_NAME}_lib
     src/my_container.cpp
+    src/utils.cpp
 )
 
 set_target_properties(${PROJECT_NAME}_lib PROPERTIES
