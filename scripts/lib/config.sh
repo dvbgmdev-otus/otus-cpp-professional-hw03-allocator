@@ -42,6 +42,14 @@ if [[ -z "${__CONFIG_SH_INCLUDED:-}" ]]; then
     # Имя проекта (используется для названия бинарника)
     # shellcheck disable=SC2034
     readonly PROJECT_NAME="otus_allocator"
+
+    # Директория с бинарниками
+    # shellcheck disable=SC2034
+    readonly BIN_DIR="$BUILD_DIR/bin"
+
+    # Бинарник проекта
+    # shellcheck disable=SC2034
+    readonly BIN_PATH="$BIN_DIR/$PROJECT_NAME"
     
     # Отступы для логирования (используются в других скриптах)
     # shellcheck disable=SC2034

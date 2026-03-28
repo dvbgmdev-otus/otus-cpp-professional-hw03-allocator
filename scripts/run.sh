@@ -26,8 +26,6 @@ source "$LIB_DIR/logging.sh"
 # shellcheck disable=SC1091
 source "$LIB_DIR/docker.sh"
 
-readonly BIN_PATH="$BUILD_DIR/$PROJECT_NAME" # предполагаем, что бинарник будет в build/ и называться как проект
-
 ensure_build() {
     if [[ -x "$BIN_PATH" ]]; then
         log_info "Binary found: $BIN_PATH" "$LOG_INDENT"
