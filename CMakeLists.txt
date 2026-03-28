@@ -50,22 +50,6 @@ if(1) # CORE LIBRARY BLOCK
     endif()
 endif()
 
-# add_library(${PROJECT_NAME}_lib
-#     src/app.cpp
-#     src/my_container.cpp
-#     src/utils.cpp
-# )
-
-# set_target_properties(${PROJECT_NAME}_lib PROPERTIES
-#     CXX_STANDARD 17
-#     CXX_STANDARD_REQUIRED ON
-#     CXX_EXTENSIONS OFF
-# )
-
-# target_include_directories(${PROJECT_NAME}_lib PUBLIC
-#     ${CMAKE_CURRENT_SOURCE_DIR}/src
-# )
-
 if(1) # MAIN APPLICATION BLOCK
     add_executable(${PROJECT_NAME}
         ${SRC_DIR}/main.cpp
@@ -87,74 +71,12 @@ if(1) # MAIN APPLICATION BLOCK
     endif()
 endif()
 
-# if (MSVC)
-#     target_compile_options(${PROJECT_NAME} PRIVATE /W4)
-#     target_compile_options(${PROJECT_NAME}_lib PRIVATE /W4)
-# else ()
-#     target_compile_options(${PROJECT_NAME} PRIVATE
-#         -Wall
-#         -Wextra
-#         -Wpedantic
-#         -Werror
-#     )
-#     target_compile_options(${PROJECT_NAME}_lib PRIVATE
-#         -Wall
-#         -Wextra
-#         -Wpedantic
-#         -Werror
-#     )
-# endif()
-
-# enable_testing()
-
-# add_test(
-#     NAME self_check
-#     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/self_check.sh $<TARGET_FILE:${PROJECT_NAME}>
-# )
-
-# -----------------------------
-# GoogleTest (FetchContent)
-# -----------------------------
-# include(FetchContent)
-
-# set(BUILD_GMOCK OFF)
-# set(INSTALL_GTEST OFF)
-
-# FetchContent_Declare(
-#     googletest
-#     URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-#     DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-# )
-
-# FetchContent_MakeAvailable(googletest)
-
-# # -----------------------------
-# # GoogleTest target
-# # -----------------------------
-# add_executable(${PROJECT_NAME}_gtest
-#     tests/my_allocator_test.cpp
-#     tests/my_container_test.cpp
-# )
-
-# target_link_libraries(${PROJECT_NAME}_gtest
-#     ${PROJECT_NAME}_lib
-#     GTest::gtest_main
-# )
-
-# include(GoogleTest)
-
-# gtest_discover_tests(${PROJECT_NAME}_gtest)
-
-
-
 if(1) # ACTIVATE BUILD TESTS BLOCK
     if (BUILD_TESTING)
         enable_testing()
         add_subdirectory(tests)
     endif()
 endif()
-
-
 
 if(1) # CPACK BLOCK
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
