@@ -26,20 +26,21 @@ source "$LIB_DIR/logging.sh"
 # shellcheck disable=SC1091
 source "$LIB_DIR/docker.sh"
 
-TEST_BINARY_PATH="$BUILD_DIR/${PROJECT_NAME}_gtest"
-CTEST_FILE_PATH="$BUILD_DIR/CTestTestfile.cmake"
-
 ensure_test_build() {
-    if [[ -x "$TEST_BINARY_PATH" && -f "$CTEST_FILE_PATH" ]]; then
-        log_info "Test artifacts found: $TEST_BINARY_PATH" "$LOG_INDENT"
+    local ctest_output
+
+    if ctest_output="$(ctest --test-dir "$BUILD_DIR" -N 2>/dev/null)" &&
+       grep -q "Total Tests: [1-9]" <<< "$ctest_output"; then
+        log_info "Test artifacts found in: $BUILD_DIR" "$LOG_INDENT"
         return
     fi
 
     log_warn "Test artifacts not found. Starting build" "$LOG_INDENT"
     "$SHELL_DIR/build.sh"
 
-    if [[ ! -x "$TEST_BINARY_PATH" || ! -f "$CTEST_FILE_PATH" ]]; then
-        log_error "Test artifacts were not produced in: $BUILD_DIR" "$LOG_INDENT"
+    if ! ctest_output="$(ctest --test-dir "$BUILD_DIR" -N 2>/dev/null)" ||
+       ! grep -q "Total Tests: [1-9]" <<< "$ctest_output"; then
+        log_error "CTest did not detect any tests in: $BUILD_DIR" "$LOG_INDENT"
         return 1
     fi
 
