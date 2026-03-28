@@ -4,7 +4,7 @@ trap 'echo "[ERROR] ${BASH_SOURCE[0]}:${LINENO}: \"${BASH_COMMAND}\" failed" >&2
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/../scripts/lib/config.sh"
+source "$SCRIPT_DIR/../../scripts/lib/config.sh"
 # shellcheck disable=SC1091
 source "$LIB_DIR/logging.sh"
 

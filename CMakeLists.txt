@@ -13,7 +13,7 @@ if(1) # PROJECT CONFIG BLOCK
     # Корень покрываемых исходников — на уровень выше
     get_filename_component(COVERAGE_BASE_DIR "${SRC_DIR}" DIRECTORY)
 
-    set(PROJECT_INCLUDE_DIRS
+    set(PROJECT_INCLUDE_DIR
         ${SRC_DIR}
     )
 

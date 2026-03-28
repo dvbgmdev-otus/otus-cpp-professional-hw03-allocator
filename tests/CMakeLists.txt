@@ -9,6 +9,10 @@ message(STATUS ">>>>> CONFIGURING BUILD TESTS SUBSYSTEM <<<<<")
 # --- Подключение вспомогательных CMake-функций для тестов ---
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/add_test.cmake)
 
+# --- Папка для unit-тестов ---
+set(UNIT_TEST_DIR "${CMAKE_SOURCE_DIR}/tests/unit")
+message(STATUS "  Unit tests dir: ${UNIT_TEST_DIR}")
+
 # --- Папка для тестовых данных ---
 # set(TEST_DATA_DIR "${CMAKE_SOURCE_DIR}/tests/data")
 # add_compile_definitions(TEST_DATA_DIR=\"${TEST_DATA_DIR}\")
@@ -34,23 +38,21 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
+include(GoogleTest)
+
 # --- Добавление тестов ---
-add_unit_test(my_allocator_tests
-    unit/my_allocator_tests.cpp
+add_unit_test(my_allocator_test
+    ${UNIT_TEST_DIR}/my_allocator_test.cpp
 )
 
-add_unit_test(my_container_tests
-    unit/my_container_tests
+add_unit_test(my_container_test
+    ${UNIT_TEST_DIR}/my_container_test.cpp
 )
 
 add_test(
     NAME self_check
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/self_check.sh $<TARGET_FILE:${PROJECT_NAME}>
+    COMMAND ${UNIT_TEST_DIR}/self_check.sh $<TARGET_FILE:${PROJECT_NAME}>
 )
-
-include(GoogleTest)
-
-gtest_discover_tests(${PROJECT_NAME}_gtest)
 
 message(STATUS "  GoogleTest added")
 

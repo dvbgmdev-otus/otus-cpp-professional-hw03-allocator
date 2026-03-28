@@ -14,11 +14,13 @@ function(add_unit_test TEST_NAME)
 
     target_compile_options(${TEST_NAME} PRIVATE ${WARN_FLAGS})
 
-    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
-
     # Включить Coverage для тестов
     if (BUILD_COVERAGE)
         target_compile_options(${TEST_NAME} PRIVATE ${COVERAGE_COMPILE_FLAGS})
         target_link_options(${TEST_NAME} PRIVATE ${COVERAGE_LINK_FLAGS})
     endif()
+
+    # add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+    gtest_discover_tests(${TEST_NAME})
+
 endfunction()
