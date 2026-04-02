@@ -31,11 +31,11 @@ template <typename Key,
           typename Compare = std::less<Key>,
           typename Allocator = std::allocator<std::pair<const Key, Value>>>
 std::chrono::nanoseconds measureFactorialMapCreationTime(std::size_t itemCount,
-                                                         std::size_t repeatCount,
-                                                         const Allocator& allocator = Allocator()) {
+                                                         std::size_t repeatCount) {
     std::size_t checksum = 0;
     const auto start = std::chrono::steady_clock::now();
     for (std::size_t i = 0; i < repeatCount; ++i) {
+        Allocator allocator{};  // Создаем новый аллокатор для каждой итерации
         const auto tempMap =
             createFactorialMap<Key, Value, Compare, Allocator>(itemCount, allocator);
         checksum += tempMap.size();  // Используем размер map для предотвращения оптимизации
