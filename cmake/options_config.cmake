@@ -28,3 +28,5 @@ endif()
 message(STATUS "  BUILD_TESTING = ${BUILD_TESTING}")
 message(STATUS "  BUILD_COVERAGE = ${BUILD_COVERAGE}")
 
+option(ALLOCATOR_DEBUG "Enable debug logs for MyAllocator" OFF)
+message(STATUS "  ALLOCATOR_DEBUG = ${ALLOCATOR_DEBUG}")

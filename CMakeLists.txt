@@ -48,6 +48,10 @@ if(1) # CORE LIBRARY BLOCK
     if(BUILD_COVERAGE)
         target_compile_options(${CORE_NAME} PRIVATE ${COVERAGE_COMPILE_FLAGS})
     endif()
+
+    if(ALLOCATOR_DEBUG)
+        target_compile_definitions(${CORE_NAME} PRIVATE ALLOCATOR_DEBUG)
+    endif()
 endif()
 
 if(1) # MAIN APPLICATION BLOCK
