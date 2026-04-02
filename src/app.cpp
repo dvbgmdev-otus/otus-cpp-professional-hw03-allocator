@@ -31,6 +31,22 @@ int runTaskMode() {
     std::cout << '\n';
 #endif
 
+#ifdef ENABLE_LIST_EXPERIMENTS
+    const auto stdList = createFactorialList<int>(10);
+    std::cout << "List with std::allocator:\n";
+    for (const auto& value : stdList) {
+        std::cout << value << ' ';
+    }
+    std::cout << '\n';
+
+    const auto myAllocList = createFactorialList<int, MyAllocator<int, 10>>(10);
+    std::cout << "List with MyAllocator:\n";
+    for (const auto& value : myAllocList) {
+        std::cout << value << ' ';
+    }
+    std::cout << '\n';
+#endif
+
     return 0;
 }
 
@@ -58,5 +74,16 @@ int runBenchmarkMode() {
               << " ns\n";
 #endif
 
+#ifdef ENABLE_LIST_EXPERIMENTS
+    const auto stdListElapsed = measureFactorialListCreationTime<int>(itemCount, repeatCount);
+    std::cout << "std::allocator average time: " << stdListElapsed.count() / repeatCount << " ns\n";
+
+    const auto myAllocListElapsed =
+        measureFactorialListCreationTime<int, MyAllocator<int, 10>>(itemCount, repeatCount);
+    std::cout << "   MyAllocator average time: " << myAllocListElapsed.count() / repeatCount
+              << " ns\n";
+#endif
+
     return 0;
 }
+

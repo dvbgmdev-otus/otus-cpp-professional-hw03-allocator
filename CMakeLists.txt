@@ -56,6 +56,10 @@ if(1) # CORE LIBRARY BLOCK
     if(ENABLE_VECTOR_EXPERIMENTS)
         target_compile_definitions(${CORE_NAME} PRIVATE ENABLE_VECTOR_EXPERIMENTS)
     endif()
+
+    if(ENABLE_LIST_EXPERIMENTS)
+        target_compile_definitions(${CORE_NAME} PRIVATE ENABLE_LIST_EXPERIMENTS)
+    endif()
 endif()
 
 if(1) # MAIN APPLICATION BLOCK
