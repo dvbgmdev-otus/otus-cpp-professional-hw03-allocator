@@ -6,7 +6,7 @@
 #include "my_allocator.h"
 #include "utils.h"
 
-using MyMapAllocator = MyAllocator<std::pair<const int, int>>;
+using MyMapAllocator = MyAllocator<std::pair<const int, int>, 10>;
 
 int runTaskMode() {
     const auto stdMap = createFactorialMap<int, int>(10);
@@ -20,7 +20,7 @@ int runTaskMode() {
 
 int runBenchmarkMode() {
     constexpr std::size_t repeatCount = 10000;
-    constexpr std::size_t itemCount = 100;
+    constexpr std::size_t itemCount = 10;
 
     const auto stdMapElapsed = measureFactorialMapCreationTime<int, int>(itemCount, repeatCount);
     std::cout << "std::allocator average time: " << stdMapElapsed.count() / repeatCount << " ns\n";
