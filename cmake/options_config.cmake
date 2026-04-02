@@ -30,3 +30,6 @@ message(STATUS "  BUILD_COVERAGE = ${BUILD_COVERAGE}")
 
 option(ALLOCATOR_DEBUG "Enable debug logs for MyAllocator" OFF)
 message(STATUS "  ALLOCATOR_DEBUG = ${ALLOCATOR_DEBUG}")
+
+option(ENABLE_VECTOR_EXPERIMENTS "Enable vector experiments" OFF)
+message(STATUS "  ENABLE_VECTOR_EXPERIMENTS = ${ENABLE_VECTOR_EXPERIMENTS}")

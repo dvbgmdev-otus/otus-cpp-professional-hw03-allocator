@@ -6,6 +6,9 @@
 #include <map>
 #include <ostream>
 #include <string>
+#ifdef ENABLE_VECTOR_EXPERIMENTS
+#include <vector>
+#endif
 
 int factorial(int value);
 
@@ -57,5 +60,35 @@ void printMap(const std::map<Key, Value, Compare, Allocator>& map,
         os << key << " " << value << '\n';
     }
 }
+
+#ifdef ENABLE_VECTOR_EXPERIMENTS
+// Функция для созданиия std::vector с факториалами от 0 до itemCount - 1
+template <typename Value, typename Allocator = std::allocator<Value>>
+std::vector<Value, Allocator> createFactorialVector(std::size_t itemCount,
+                                                    const Allocator& allocator = Allocator()) {
+    std::vector<Value, Allocator> result(allocator);
+    result.reserve(itemCount);
+    for (std::size_t i = 0; i < itemCount; ++i) {
+        result.push_back(factorial(static_cast<int>(i) % 10));
+    }
+    return result;
+}
+
+// Функция для измерения времени создания N=repeatCount std::vector с факториалами
+template <typename Value, typename Allocator = std::allocator<Value>>
+std::chrono::nanoseconds measureFactorialVectorCreationTime(std::size_t itemCount,
+                                                            std::size_t repeatCount) {
+    std::size_t checksum = 0;
+    const auto start = std::chrono::steady_clock::now();
+    for (std::size_t i = 0; i < repeatCount; ++i) {
+        Allocator allocator{};  // Создаем новый аллокатор для каждой итерации
+        const auto tempVector = createFactorialVector<Value, Allocator>(itemCount, allocator);
+        checksum += tempVector.size();  // Используем размер vector для предотвращения оптимизации
+    }
+    const auto end = std::chrono::steady_clock::now();
+    (void)checksum;  // чтобы избежать предупреждения о неиспользуемой переменной
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+}
+#endif
 
 #endif  // UTILS_H

@@ -52,6 +52,10 @@ if(1) # CORE LIBRARY BLOCK
     if(ALLOCATOR_DEBUG)
         target_compile_definitions(${CORE_NAME} PRIVATE ALLOCATOR_DEBUG)
     endif()
+
+    if(ENABLE_VECTOR_EXPERIMENTS)
+        target_compile_definitions(${CORE_NAME} PRIVATE ENABLE_VECTOR_EXPERIMENTS)
+    endif()
 endif()
 
 if(1) # MAIN APPLICATION BLOCK
