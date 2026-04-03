@@ -41,6 +41,7 @@ template <typename T, typename Allocator>
 MyContainer<T, Allocator>& MyContainer<T, Allocator>::operator=(const MyContainer& other) {
     if (this != &other) {
         clear();
+        m_allocator = other.m_allocator;
         copyFrom(other);
     }
     return *this;
@@ -51,6 +52,7 @@ template <typename T, typename Allocator>
 MyContainer<T, Allocator>& MyContainer<T, Allocator>::operator=(MyContainer&& other) noexcept {
     if (this != &other) {
         clear();
+        m_allocator = std::move(other.m_allocator);
         moveFrom(std::move(other));
     }
     return *this;
