@@ -1,0 +1,134 @@
+#!/bin/bash
+set -eEuo pipefail
+
+# ---- Функция установки конфигурации ----
+set_config() {
+    DEBUG=0
+    [[ "${1-}" == "--debug" || "${1-}" == "-g" ]] && DEBUG=1
+
+    # ---- Функция вывода заголовков секций ----
+    log_section() {
+        local BLUE="\033[34m"
+        local CLEAR="\033[0m"
+        printf "%b===> %s%b\n" "$BLUE" "$*" "$CLEAR"
+    }
+
+    # ---- Список подавляемых предупреждений ----
+    SUPPRESS_PATTERNS=(
+        "Possible precedence problem"
+        "geninfo"
+    )
+
+    # ---- Функция фильтрации вывода ----
+    filter_output() {
+        if (( DEBUG == 1 )); then
+            cat
+            return
+        fi
+        local line
+        while IFS= read -r line; do
+            local skip=0
+            for pat in "${SUPPRESS_PATTERNS[@]}"; do
+                [[ "$line" == *"$pat"* ]] && skip=1 && break
+            done
+            (( skip == 0 )) && echo "$line"
+        done
+    }
+
+    COVERAGE_BASE_DIR="@COVERAGE_BASE_DIR@"
+    BUILD_DIR="@CMAKE_BINARY_DIR@"
+    cd "${BUILD_DIR}"
+}
+
+# ---- Запуск тестов ----
+run_tests() {
+    log_section "Running unit tests..."
+    ctest --output-on-failure
+}
+
+# ---- Сбор сырых данных покрытия ----
+capture_coverage() {
+    log_section "Capturing raw coverage..."
+    # ---- Выполняем lcov, фильтруем вывод ----
+    lcov --capture \
+        --directory "${COVERAGE_BASE_DIR}" \
+        --base-directory "${COVERAGE_BASE_DIR}" \
+        --output-file coverage_raw.info \
+        --ignore-errors mismatch,source,empty,gcov,inconsistent,unsupported,format \
+        --rc geninfo_unexecuted_blocks=1 \
+        --quiet \
+        2>&1 | filter_output || true
+
+}
+
+# ---- Сбор списка файлов проекта для покрытия ----
+collect_files() {
+    log_section "Collecting coverage file list..."
+    args=()
+    short_list=()
+    while IFS= read -r f; do
+        [[ -z "$f" ]] && continue
+        # полный путь — нужен для lcov
+        args+=("$f")
+        # относительный — для красивого вывода
+        rel="$(realpath --relative-to="${COVERAGE_BASE_DIR}" "$f")"
+        short_list+=("$rel")
+    done < "@COVERAGE_LIST_FILE@"
+    # Показываем относительные пути
+    printf '  %s\n' "${short_list[@]}"
+}
+
+# ---- Извлечение и фильтрация данных покрытия ----
+filter_coverage() {
+    log_section "Filtering coverage..."
+
+    COVERAGE_PATTERNS=()
+
+    while IFS= read -r f; do
+        [[ -z "$f" ]] && continue
+        # f — абсолютный путь → делаем относительный к PROJECT_ROOT
+        rel="${f#"${COVERAGE_BASE_DIR}/"}"
+        # берём каталог внутри tracefile
+        dir="$(dirname "$rel")"
+        COVERAGE_PATTERNS+=("${dir}/*")
+    done < "@COVERAGE_LIST_FILE@"
+
+    # Убираем дубликаты
+    mapfile -t COVERAGE_PATTERNS < <(printf "%s\n" "${COVERAGE_PATTERNS[@]}" | sort -u)
+
+    lcov --extract coverage_raw.info \
+        "${COVERAGE_PATTERNS[@]}" \
+        --output-file coverage.info \
+        --ignore-errors unused,unused,mismatch \
+        --quiet \
+        2>&1 | filter_output || true
+}
+
+# ---- Генерация HTML отчета ----
+generate_html() {
+    log_section "Generating HTML report..."
+    genhtml coverage.info --output-directory out --flat --quiet
+}
+
+# ---- Открытие HTML отчета в браузере ----
+open_report() {
+    log_section "Opening coverage report..."
+    printf '  %s\n' "out/index.html"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        open out/index.html >/dev/null 2>&1 || true
+    else
+        xdg-open out/index.html >/dev/null 2>&1 || true
+    fi
+}
+
+main() {
+    set_config "$@"
+    run_tests
+    capture_coverage
+    collect_files
+    filter_coverage
+    generate_html
+    open_report
+}
+
+main "$@"
