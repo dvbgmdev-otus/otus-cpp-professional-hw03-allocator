@@ -41,8 +41,8 @@ public:
     void clear();                                     // очистка списка
 
     // --- Методы информации о списке ---
-    size_type size() const;  // текущий размер
-    bool empty() const;      // проверка на пустоту
+    size_type size() const noexcept;  // текущий размер
+    bool empty() const noexcept;      // проверка на пустоту
 
     // --- Методы доступа к элементам ---
     T& at(const size_t index);

@@ -173,12 +173,12 @@ void MyContainer<T, Allocator>::clear() {
 // --- Методы информации о списке ---
 
 template <typename T, typename Allocator>
-typename MyContainer<T, Allocator>::size_type MyContainer<T, Allocator>::size() const {
+typename MyContainer<T, Allocator>::size_type MyContainer<T, Allocator>::size() const noexcept {
     return m_size;
 }
 
 template <typename T, typename Allocator>
-bool MyContainer<T, Allocator>::empty() const {
+bool MyContainer<T, Allocator>::empty() const noexcept {
     return m_size == 0;
 }
 
