@@ -170,8 +170,13 @@ void MyContainer<T, Allocator>::clear() {
 // --- Методы информации о списке ---
 
 template <typename T, typename Allocator>
-size_t MyContainer<T, Allocator>::size() const {
+typename MyContainer<T, Allocator>::size_type MyContainer<T, Allocator>::size() const {
     return m_size;
+}
+
+template <typename T, typename Allocator>
+bool MyContainer<T, Allocator>::empty() const {
+    return m_size == 0;
 }
 
 // --- Методы доступа к элементам ---
