@@ -7,6 +7,7 @@
 #include <memory>
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 
 #include "my_allocator.h"
 
@@ -60,6 +61,11 @@ private:
     Node* m_lastNode{ nullptr };        // указатель на последний элемент
     node_allocator_type m_allocator{};  // аллокатор для узлов списка
 
+    Node* createDefaultNode();
+    Node* createNode(const T& value);
+    Node* createNode(T&& value);
+    void destroyNode(Node* node) noexcept;
+
     void copyFrom(const MyContainer& other);      // копирование из другого списка
     void moveFrom(MyContainer&& other) noexcept;  // перемещение из другого списка
     void checkIndex(const size_t index, const char* function_name) const;  // проверка индекса
@@ -70,6 +76,11 @@ class MyContainer<T, Allocator>::Node {
 public:
     Node* next{ nullptr };  // указатель на следующий элемент
     T data{};               // данные элемента
+
+    Node() = default;
+
+    explicit Node(const T& value) : next(nullptr), data(value) {}
+    explicit Node(T&& value) : next(nullptr), data(std::move(value)) {}
 };
 
 template <typename T, typename Allocator>

@@ -263,6 +263,51 @@ void MyContainer<T, Allocator>::print() const {
 // --- Приватные методы ---
 
 template <typename T, typename Allocator>
+typename MyContainer<T, Allocator>::Node*
+MyContainer<T, Allocator>::createDefaultNode() {
+    Node* node = node_allocator_traits::allocate(m_allocator, 1);
+    try {
+        node_allocator_traits::construct(m_allocator, node);
+    } catch (...) {
+        node_allocator_traits::deallocate(m_allocator, node, 1);
+        throw;
+    }
+    return node;
+}
+
+template <typename T, typename Allocator>
+typename MyContainer<T, Allocator>::Node*
+MyContainer<T, Allocator>::createNode(const T& value) {
+    Node* node = node_allocator_traits::allocate(m_allocator, 1);
+    try {
+        node_allocator_traits::construct(m_allocator, node, value);
+    } catch (...) {
+        node_allocator_traits::deallocate(m_allocator, node, 1);
+        throw;
+    }
+    return node;
+}
+
+template <typename T, typename Allocator>
+typename MyContainer<T, Allocator>::Node*
+MyContainer<T, Allocator>::createNode(T&& value) {
+    Node* node = node_allocator_traits::allocate(m_allocator, 1);
+    try {
+        node_allocator_traits::construct(m_allocator, node, std::move(value));
+    } catch (...) {
+        node_allocator_traits::deallocate(m_allocator, node, 1);
+        throw;
+    }
+    return node;
+}
+
+template <typename T, typename Allocator>
+void MyContainer<T, Allocator>::destroyNode(Node* node) noexcept {
+    node_allocator_traits::destroy(m_allocator, node);
+    node_allocator_traits::deallocate(m_allocator, node, 1);
+}
+
+template <typename T, typename Allocator>
 void MyContainer<T, Allocator>::copyFrom(const MyContainer& other) {
     clear();
     if (other.m_size > 0) {
