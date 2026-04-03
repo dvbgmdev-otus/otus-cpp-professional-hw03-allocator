@@ -315,21 +315,10 @@ void MyContainer<T, Allocator>::destroyNode(Node* node) noexcept {
 template <typename T, typename Allocator>
 void MyContainer<T, Allocator>::copyFrom(const MyContainer& other) {
     clear();
-    if (other.m_size > 0) {
-        Node* it = other.m_firstNode;
-        m_firstNode = new Node();
-        m_firstNode->data = it->data;
-        m_lastNode = m_firstNode;
-        it = it->next;
-        for (size_t i = 1; i < other.m_size; i++) {
-            Node* newNode = new Node();
-            newNode->data = it->data;
-            m_lastNode->next = newNode;
-            m_lastNode = newNode;
-            it = it->next;
-        }
-        m_lastNode->next = nullptr;
-        m_size = other.m_size;
+    Node* current = other.m_firstNode;
+    while (current != nullptr) {
+        push_back(current->data);
+        current = current->next;
     }
 }
 
