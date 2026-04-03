@@ -128,8 +128,7 @@ void MyContainer<T, Allocator>::insert(const size_t index, const T& value) {
         return;
     }
     checkIndex(index, "insert");
-    Node* newNode = new Node();
-    newNode->data = value;
+    Node* newNode = createNode(value);
     // вставка в начало
     if (index == 0) {
         newNode->next = m_firstNode;
@@ -364,7 +363,6 @@ MyContainer<T, Allocator>::Node::Node(const T& value) : next(nullptr), data(valu
 
 template <typename T, typename Allocator>
 MyContainer<T, Allocator>::Node::Node(T&& value) : next(nullptr), data(std::move(value)) {}
-
 
 // *****************************************************************************************
 // Класс MyContainer::iterator - итератор для MyContainer
