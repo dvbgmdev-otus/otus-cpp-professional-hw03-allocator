@@ -178,7 +178,7 @@ void MyContainer<T, Allocator>::clear() {
     Node* current = m_firstNode;
     while (current != nullptr) {
         Node* nextNode = current->next;
-        delete current;
+        destroyNode(current);
         current = nextNode;
     }
     m_firstNode = nullptr;
