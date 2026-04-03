@@ -197,7 +197,7 @@ T& MyContainer<T, Allocator>::at(const size_t index) {
 template <typename T, typename Allocator>
 const T& MyContainer<T, Allocator>::at(size_t index) const {
     checkIndex(index, "at");
-    Node* current = m_firstNode;
+    const Node* current = m_firstNode;
     for (size_t i = 0; i < index; ++i) {
         current = current->next;
     }
@@ -241,7 +241,7 @@ typename MyContainer<T, Allocator>::const_iterator MyContainer<T, Allocator>::en
 
 template <typename T, typename Allocator>
 void MyContainer<T, Allocator>::print() const {
-    Node* current = m_firstNode;
+    const Node* current = m_firstNode;
     size_t index = 0;
     std::cout << "=== List Contents ===" << std::endl;
     std::cout << " Size: " << m_size << std::endl;
