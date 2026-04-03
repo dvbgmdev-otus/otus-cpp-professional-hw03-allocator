@@ -11,6 +11,9 @@
 
 #include "my_allocator.h"
 
+// ****************************************************************************************
+// Класс MyContainer - односвязный список с поддержкой аллокатора
+// ****************************************************************************************
 template <typename T, typename Allocator = std::allocator<T>>
 class MyContainer {
 public:
@@ -30,20 +33,25 @@ public:
     MyContainer& operator=(const MyContainer& other);      // оператор присваивания копированием
     MyContainer& operator=(MyContainer&& other) noexcept;  // оператор присваивания перемещением
     bool operator==(const MyContainer& other) const;       // оператор сравнения
-    bool operator!=(const MyContainer& other) const;       // оператора сравнения
+    bool operator!=(const MyContainer& other) const;       // оператор сравнения
     ~MyContainer();                                        // деструктор
 
+    // --- Методы изменения списка ---
     void push_back(const T& value);                   // добавление элемента в конец списка
     void insert(const size_t index, const T& value);  // добавление по индексу
     void erase(const size_t index);                   // удаление по индексу
     void clear();                                     // очистка списка
+
+    // --- Методы информации о списке ---
     size_t size() const;                              // текущий размер
 
+    // --- Методы доступа к элементам ---
     T& at(const size_t index);
     const T& at(size_t index) const;
     T& operator[](const size_t index);
     const T& operator[](const size_t index) const;
 
+    // --- Итераторы ---
     iterator begin() noexcept;
     iterator end() noexcept;
     const_iterator begin() const noexcept;
@@ -71,6 +79,9 @@ private:
     void checkIndex(const size_t index, const char* function_name) const;  // проверка индекса
 };
 
+// ****************************************************************************************
+// Класс MyContainer::Node - элемент односвязного списка
+// ****************************************************************************************
 template <typename T, typename Allocator>
 class MyContainer<T, Allocator>::Node {
 public:
@@ -79,10 +90,13 @@ public:
 
     Node() = default;
 
-    explicit Node(const T& value) : next(nullptr), data(value) {}
-    explicit Node(T&& value) : next(nullptr), data(std::move(value)) {}
+    explicit Node(const T& value);
+    explicit Node(T&& value);
 };
 
+// *****************************************************************************************
+// Класс MyContainer::iterator - итератор для MyContainer
+// *****************************************************************************************
 template <typename T, typename Allocator>
 class MyContainer<T, Allocator>::iterator {
 public:
@@ -98,6 +112,9 @@ private:
     Node* m_node;
 };
 
+// *****************************************************************************************
+// Класс MyContainer::const_iterator - константный итератор для MyContainer
+// *****************************************************************************************
 template <typename T, typename Allocator>
 class MyContainer<T, Allocator>::const_iterator {
 public:
@@ -113,6 +130,9 @@ private:
     const Node* m_node;
 };
 
+// *****************************************************************************************
+// Оператор вывода для MyContainer
+// *****************************************************************************************
 template <typename T, typename Allocator>
 std::ostream& operator<<(std::ostream& os, const MyContainer<T, Allocator>& myContainer);
 

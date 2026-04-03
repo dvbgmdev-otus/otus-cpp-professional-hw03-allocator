@@ -3,6 +3,10 @@
 
 #include "my_container.h"
 
+// ****************************************************************************************
+// Класс MyContainer - односвязный список с поддержкой аллокатора
+// ****************************************************************************************
+
 // Конструктор по умолчанию и с параметром размера
 template <typename T, typename Allocator>
 MyContainer<T, Allocator>::MyContainer(const size_t size) : m_size{ size } {
@@ -19,7 +23,8 @@ MyContainer<T, Allocator>::MyContainer(const size_t size) : m_size{ size } {
 
 // Конструктор инициализации списком
 template <typename T, typename Allocator>
-MyContainer<T, Allocator>::MyContainer(const std::initializer_list<T> initList) : m_size{ initList.size() } {
+MyContainer<T, Allocator>::MyContainer(const std::initializer_list<T> initList)
+    : m_size{ initList.size() } {
     if (m_size > 0) {
         auto it = initList.begin();
         m_firstNode = new Node();
@@ -232,7 +237,8 @@ typename MyContainer<T, Allocator>::iterator MyContainer<T, Allocator>::end() no
 }
 
 template <typename T, typename Allocator>
-typename MyContainer<T, Allocator>::const_iterator MyContainer<T, Allocator>::begin() const noexcept {
+typename MyContainer<T, Allocator>::const_iterator MyContainer<T, Allocator>::begin()
+    const noexcept {
     return const_iterator(m_firstNode);
 }
 
@@ -240,6 +246,8 @@ template <typename T, typename Allocator>
 typename MyContainer<T, Allocator>::const_iterator MyContainer<T, Allocator>::end() const noexcept {
     return const_iterator(nullptr);
 }
+
+// --- Вывод в консоль ---
 
 template <typename T, typename Allocator>
 void MyContainer<T, Allocator>::print() const {
@@ -263,8 +271,7 @@ void MyContainer<T, Allocator>::print() const {
 // --- Приватные методы ---
 
 template <typename T, typename Allocator>
-typename MyContainer<T, Allocator>::Node*
-MyContainer<T, Allocator>::createDefaultNode() {
+typename MyContainer<T, Allocator>::Node* MyContainer<T, Allocator>::createDefaultNode() {
     Node* node = node_allocator_traits::allocate(m_allocator, 1);
     try {
         node_allocator_traits::construct(m_allocator, node);
@@ -276,8 +283,7 @@ MyContainer<T, Allocator>::createDefaultNode() {
 }
 
 template <typename T, typename Allocator>
-typename MyContainer<T, Allocator>::Node*
-MyContainer<T, Allocator>::createNode(const T& value) {
+typename MyContainer<T, Allocator>::Node* MyContainer<T, Allocator>::createNode(const T& value) {
     Node* node = node_allocator_traits::allocate(m_allocator, 1);
     try {
         node_allocator_traits::construct(m_allocator, node, value);
@@ -289,8 +295,7 @@ MyContainer<T, Allocator>::createNode(const T& value) {
 }
 
 template <typename T, typename Allocator>
-typename MyContainer<T, Allocator>::Node*
-MyContainer<T, Allocator>::createNode(T&& value) {
+typename MyContainer<T, Allocator>::Node* MyContainer<T, Allocator>::createNode(T&& value) {
     Node* node = node_allocator_traits::allocate(m_allocator, 1);
     try {
         node_allocator_traits::construct(m_allocator, node, std::move(value));
@@ -349,7 +354,20 @@ void MyContainer<T, Allocator>::checkIndex(const size_t index, const char* funct
     }
 }
 
-// --- Реализация методов iterator ---
+// ****************************************************************************************
+// Класс MyContainer::Node - элемент односвязного списка
+// ****************************************************************************************
+
+template <typename T, typename Allocator>
+MyContainer<T, Allocator>::Node::Node(const T& value) : next(nullptr), data(value) {}
+
+template <typename T, typename Allocator>
+MyContainer<T, Allocator>::Node::Node(T&& value) : next(nullptr), data(std::move(value)) {}
+
+
+// *****************************************************************************************
+// Класс MyContainer::iterator - итератор для MyContainer
+// *****************************************************************************************
 
 template <typename T, typename Allocator>
 MyContainer<T, Allocator>::iterator::iterator(Node* node) : m_node(node) {}
@@ -389,7 +407,9 @@ bool MyContainer<T, Allocator>::iterator::operator!=(const iterator& other) cons
     return m_node != other.m_node;
 }
 
-// --- Реализация методов const_iterator ---
+// *****************************************************************************************
+// Класс MyContainer::const_iterator - константный итератор для MyContainer
+// *****************************************************************************************
 
 template <typename T, typename Allocator>
 MyContainer<T, Allocator>::const_iterator::const_iterator(const Node* node) : m_node(node) {}
@@ -405,7 +425,8 @@ const T* MyContainer<T, Allocator>::const_iterator::get() const {
 }
 
 template <typename T, typename Allocator>
-typename MyContainer<T, Allocator>::const_iterator& MyContainer<T, Allocator>::const_iterator::operator++() {
+typename MyContainer<T, Allocator>::const_iterator&
+MyContainer<T, Allocator>::const_iterator::operator++() {
     if (m_node) {
         m_node = m_node->next;
     }
@@ -413,7 +434,8 @@ typename MyContainer<T, Allocator>::const_iterator& MyContainer<T, Allocator>::c
 }
 
 template <typename T, typename Allocator>
-typename MyContainer<T, Allocator>::const_iterator MyContainer<T, Allocator>::const_iterator::operator++(int) {
+typename MyContainer<T, Allocator>::const_iterator
+MyContainer<T, Allocator>::const_iterator::operator++(int) {
     const_iterator temp = *this;
     ++(*this);
     return temp;
@@ -429,6 +451,9 @@ bool MyContainer<T, Allocator>::const_iterator::operator!=(const const_iterator&
     return m_node != other.m_node;
 }
 
+// *****************************************************************************************
+// Оператор вывода для MyContainer
+// *****************************************************************************************
 template <typename T, typename Allocator>
 std::ostream& operator<<(std::ostream& os, const MyContainer<T, Allocator>& myContainer) {
     for (const auto& item : myContainer) {
