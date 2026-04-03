@@ -9,35 +9,17 @@
 
 // Конструктор по умолчанию и с параметром размера
 template <typename T, typename Allocator>
-MyContainer<T, Allocator>::MyContainer(const size_t size) : m_size{ size } {
-    if (m_size > 0) {
-        m_firstNode = new Node();
-        m_lastNode = m_firstNode;
-        for (size_t i = 1; i < m_size; i++) {
-            Node* newNode = new Node();
-            m_lastNode->next = newNode;
-            m_lastNode = newNode;
-        }
+MyContainer<T, Allocator>::MyContainer(const size_t size) {
+    for (size_t i = 0; i < size; ++i) {
+        push_back(T{});
     }
 }
 
 // Конструктор инициализации списком
 template <typename T, typename Allocator>
-MyContainer<T, Allocator>::MyContainer(const std::initializer_list<T> initList)
-    : m_size{ initList.size() } {
-    if (m_size > 0) {
-        auto it = initList.begin();
-        m_firstNode = new Node();
-        m_firstNode->data = *it;
-        m_lastNode = m_firstNode;
-        ++it;
-        for (size_t i = 1; i < m_size; i++) {
-            Node* newNode = new Node();
-            newNode->data = *it;
-            m_lastNode->next = newNode;
-            m_lastNode = newNode;
-            ++it;
-        }
+MyContainer<T, Allocator>::MyContainer(const std::initializer_list<T> initList) {
+    for (const auto& value : initList) {
+        push_back(value);
     }
 }
 
