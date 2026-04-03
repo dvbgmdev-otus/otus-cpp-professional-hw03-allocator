@@ -69,7 +69,6 @@ private:
     Node* m_lastNode{ nullptr };        // указатель на последний элемент
     node_allocator_type m_allocator{};  // аллокатор для узлов списка
 
-    Node* createDefaultNode();
     Node* createNode(const T& value);
     Node* createNode(T&& value);
     void destroyNode(Node* node) noexcept;

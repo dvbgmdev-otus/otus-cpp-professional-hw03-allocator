@@ -253,18 +253,6 @@ void MyContainer<T, Allocator>::print() const {
 // --- Приватные методы ---
 
 template <typename T, typename Allocator>
-typename MyContainer<T, Allocator>::Node* MyContainer<T, Allocator>::createDefaultNode() {
-    Node* node = node_allocator_traits::allocate(m_allocator, 1);
-    try {
-        node_allocator_traits::construct(m_allocator, node);
-    } catch (...) {
-        node_allocator_traits::deallocate(m_allocator, node, 1);
-        throw;
-    }
-    return node;
-}
-
-template <typename T, typename Allocator>
 typename MyContainer<T, Allocator>::Node* MyContainer<T, Allocator>::createNode(const T& value) {
     Node* node = node_allocator_traits::allocate(m_allocator, 1);
     try {
