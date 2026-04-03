@@ -33,7 +33,6 @@ if(1) # CORE LIBRARY BLOCK
 
     set(${CORE_SRC}
         ${SRC_DIR}/app.cpp
-        ${SRC_DIR}/my_container.cpp
         ${SRC_DIR}/utils.cpp
     )
 
