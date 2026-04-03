@@ -4,12 +4,19 @@
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 
-template <typename T>
+#include "my_allocator.h"
+
+template <typename T, typename Allocator = std::allocator<T>>
 class MyContainer {
 public:
+    using value_type = T;
+    using allocator_type = Allocator;
+    using size_type = std::size_t;
+
     class Node;
 
     class iterator;
@@ -44,24 +51,29 @@ public:
     void print() const;  // вывод в консоль
 
 private:
-    size_t m_size{ 0 };            // текущий размер
-    Node* m_firstNode{ nullptr };  // указатель на первый элемент
-    Node* m_lastNode{ nullptr };   // указатель на последний элемент
+    using allocator_traits = std::allocator_traits<allocator_type>;
+    using node_allocator_type = typename allocator_traits::template rebind_alloc<Node>;
+    using node_allocator_traits = std::allocator_traits<node_allocator_type>;
+
+    size_type m_size{ 0 };              // текущий размер
+    Node* m_firstNode{ nullptr };       // указатель на первый элемент
+    Node* m_lastNode{ nullptr };        // указатель на последний элемент
+    node_allocator_type m_allocator{};  // аллокатор для узлов списка
 
     void copyFrom(const MyContainer& other);      // копирование из другого списка
     void moveFrom(MyContainer&& other) noexcept;  // перемещение из другого списка
     void checkIndex(const size_t index, const char* function_name) const;  // проверка индекса
 };
 
-template <typename T>
-class MyContainer<T>::Node {
+template <typename T, typename Allocator>
+class MyContainer<T, Allocator>::Node {
 public:
     Node* next{ nullptr };  // указатель на следующий элемент
     T data{};               // данные элемента
 };
 
-template <typename T>
-class MyContainer<T>::iterator {
+template <typename T, typename Allocator>
+class MyContainer<T, Allocator>::iterator {
 public:
     explicit iterator(Node* node = nullptr);
     T& operator*() const;
@@ -75,8 +87,8 @@ private:
     Node* m_node;
 };
 
-template <typename T>
-class MyContainer<T>::const_iterator {
+template <typename T, typename Allocator>
+class MyContainer<T, Allocator>::const_iterator {
 public:
     explicit const_iterator(const Node* node = nullptr);
     const T& operator*() const;
@@ -90,8 +102,8 @@ private:
     const Node* m_node;
 };
 
-template <typename T>
-std::ostream& operator<<(std::ostream& os, const MyContainer<T>& myVector);
+template <typename T, typename Allocator>
+std::ostream& operator<<(std::ostream& os, const MyContainer<T, Allocator>& myContainer);
 
 #include "my_container.tpp"
 
