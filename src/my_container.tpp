@@ -169,7 +169,7 @@ void MyContainer<T, Allocator>::erase(const size_t index) {
             m_lastNode = prev;
         }
     }
-    delete toDelete;
+    destroyNode(toDelete);
     --m_size;
 }
 
