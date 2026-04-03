@@ -108,8 +108,8 @@ MyContainer<T, Allocator>::~MyContainer() {
 
 template <typename T, typename Allocator>
 void MyContainer<T, Allocator>::push_back(const T& value) {
-    Node* newNode = new Node();
-    newNode->data = value;
+    Node* newNode = createNode(value);
+
     if (m_size == 0) {
         m_firstNode = newNode;
         m_lastNode = newNode;
@@ -117,6 +117,7 @@ void MyContainer<T, Allocator>::push_back(const T& value) {
         m_lastNode->next = newNode;
         m_lastNode = newNode;
     }
+
     ++m_size;
 }
 
