@@ -25,13 +25,14 @@ MyContainer<T, Allocator>::MyContainer(const std::initializer_list<T> initList) 
 
 // Конструктор копирования
 template <typename T, typename Allocator>
-MyContainer<T, Allocator>::MyContainer(const MyContainer& other) {
+MyContainer<T, Allocator>::MyContainer(const MyContainer& other) : m_allocator(other.m_allocator) {
     copyFrom(other);
 }
 
 // Конструктор перемещения
 template <typename T, typename Allocator>
-MyContainer<T, Allocator>::MyContainer(MyContainer&& other) noexcept {
+MyContainer<T, Allocator>::MyContainer(MyContainer&& other) noexcept
+    : m_allocator(std::move(other.m_allocator)) {
     moveFrom(std::move(other));
 }
 
