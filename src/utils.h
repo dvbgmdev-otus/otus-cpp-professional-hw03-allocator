@@ -4,7 +4,7 @@
 #include <chrono>
 #include <cstddef>
 #include <map>
-#include <ostream>
+#include <iostream>
 #include <string>
 #ifdef ENABLE_VECTOR_EXPERIMENTS
 #include <vector>
@@ -56,13 +56,12 @@ std::chrono::nanoseconds measureFactorialMapCreationTime(std::size_t itemCount,
 // Функция для печати содержимого std::map
 template <typename Key, typename Value, typename Compare, typename Allocator>
 void printMap(const std::map<Key, Value, Compare, Allocator>& map,
-              std::ostream& os,
               const std::string& title = "") {
     if (!title.empty()) {
-        os << title << '\n';
+        std::cout << title << '\n';
     }
     for (const auto& [key, value] : map) {
-        os << key << " " << value << '\n';
+        std::cout << key << " " << value << '\n';
     }
 }
 
@@ -99,14 +98,14 @@ std::chrono::nanoseconds measureSequentialMyContainerCreationTime(std::size_t it
 // Функция для печати содержимого MyContainer
 template <typename Value, typename Allocator>
 void printMyContainer(const MyContainer<Value, Allocator>& container,
-                      std::ostream& os,
                       const std::string& title = "") {
     if (!title.empty()) {
-        os << title << '\n';
+        std::cout << title << '\n';
     }
     for (const auto& item : container) {
-        os << item << '\n';
+        std::cout << item << ' ';
     }
+    std::cout << '\n';
 }
 
 #ifdef ENABLE_VECTOR_EXPERIMENTS

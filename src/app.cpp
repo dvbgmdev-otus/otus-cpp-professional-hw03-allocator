@@ -11,16 +11,20 @@ using MyContainerAllocator = MyAllocator<int, 10>;
 
 int runTaskMode() {
     const auto stdMap = createFactorialMap<int, int>(10);
-    printMap(stdMap, std::cout, "Map with std::allocator:");
+    printMap(stdMap, "Map with std::allocator:");
+    std::cout << '\n';
 
     const auto myAllocMap = createFactorialMap<int, int, std::less<int>, MyMapAllocator>(10);
-    printMap(myAllocMap, std::cout, "Map with MyAllocator:");
+    printMap(myAllocMap, "Map with MyAllocator:");
+    std::cout << '\n';
 
     const auto stdContainer = createSequentialMyContainer<int>(10);
-    printMyContainer(stdContainer, std::cout, "MyContainer with std::allocator:");
+    printMyContainer(stdContainer, "MyContainer with std::allocator:");
+    std::cout << '\n';
 
     const auto myAllocContainer = createSequentialMyContainer<int, MyContainerAllocator>(10);
-    printMyContainer(myAllocContainer, std::cout, "MyContainer with MyAllocator:");
+    printMyContainer(myAllocContainer, "MyContainer with MyAllocator:");
+    std::cout << '\n';
 
 #ifdef ENABLE_VECTOR_EXPERIMENTS
     const auto stdVector = createFactorialVector<int>(10);
