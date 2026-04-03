@@ -24,8 +24,17 @@ public:
     class iterator;
     class const_iterator;
 
+    explicit MyContainer(const allocator_type& allocator);  // конструктор с аллокатором
+
     explicit MyContainer(const size_t size = 0);  // конструктор по умолчанию и с параметром размера
+    MyContainer(const size_t size,
+                const allocator_type&
+                    allocator);  // конструктор по умолчанию и с параметром размера + аллокатор
+
     MyContainer(const std::initializer_list<T> initList);  // конструктор инициализации списком
+    MyContainer(const std::initializer_list<T> initList,
+                const allocator_type& allocator);  // конструктор инициализации списком + аллокатор
+
     MyContainer(const MyContainer& other);                 // конструктор копирования
     MyContainer(MyContainer&& other) noexcept;             // конструктор перемещения
     MyContainer& operator=(const MyContainer& other);      // оператор присваивания копированием

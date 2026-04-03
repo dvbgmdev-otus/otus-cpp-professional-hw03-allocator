@@ -7,6 +7,7 @@
 #include "utils.h"
 
 using MyMapAllocator = MyAllocator<std::pair<const int, int>, 10>;
+using MyContainerAllocator = MyAllocator<int, 10>;
 
 int runTaskMode() {
     const auto stdMap = createFactorialMap<int, int>(10);
@@ -14,6 +15,12 @@ int runTaskMode() {
 
     const auto myAllocMap = createFactorialMap<int, int, std::less<int>, MyMapAllocator>(10);
     printMap(myAllocMap, std::cout, "Map with MyAllocator:");
+
+    const auto stdContainer = createSequentialMyContainer<int>(10);
+    printMyContainer(stdContainer, std::cout, "MyContainer with std::allocator:");
+
+    const auto myAllocContainer = createSequentialMyContainer<int, MyContainerAllocator>(10);
+    printMyContainer(myAllocContainer, std::cout, "MyContainer with MyAllocator:");
 
 #ifdef ENABLE_VECTOR_EXPERIMENTS
     const auto stdVector = createFactorialVector<int>(10);
@@ -61,6 +68,14 @@ int runBenchmarkMode() {
         measureFactorialMapCreationTime<int, int, std::less<int>, MyMapAllocator>(itemCount,
                                                                                   repeatCount);
     std::cout << "   MyAllocator average time: " << myAllocMapElapsed.count() / repeatCount
+              << " ns\n";
+
+    const auto stdContainerElapsed = measureSequentialMyContainerCreationTime<int>(itemCount, repeatCount);
+    std::cout << "std::allocator average time: " << stdContainerElapsed.count() / repeatCount << " ns\n";
+
+    const auto myAllocContainerElapsed =
+        measureSequentialMyContainerCreationTime<int, MyContainerAllocator>(itemCount, repeatCount);
+    std::cout << "   MyAllocator average time: " << myAllocContainerElapsed.count() / repeatCount
               << " ns\n";
 
 #ifdef ENABLE_VECTOR_EXPERIMENTS

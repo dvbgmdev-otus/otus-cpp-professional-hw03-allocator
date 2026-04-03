@@ -7,6 +7,10 @@
 // Класс MyContainer - односвязный список с поддержкой аллокатора
 // ****************************************************************************************
 
+// Конструктор с аллокатором
+template <typename T, typename Allocator>
+MyContainer<T, Allocator>::MyContainer(const allocator_type& allocator) : m_allocator(allocator) {}
+
 // Конструктор по умолчанию и с параметром размера
 template <typename T, typename Allocator>
 MyContainer<T, Allocator>::MyContainer(const size_t size) {
@@ -15,9 +19,28 @@ MyContainer<T, Allocator>::MyContainer(const size_t size) {
     }
 }
 
+// конструктор по умолчанию и с параметром размера + аллокатор
+template <typename T, typename Allocator>
+MyContainer<T, Allocator>::MyContainer(const size_t size, const allocator_type& allocator)
+    : m_allocator(allocator) {
+    for (size_t i = 0; i < size; ++i) {
+        push_back(T{});
+    }
+}
+
 // Конструктор инициализации списком
 template <typename T, typename Allocator>
 MyContainer<T, Allocator>::MyContainer(const std::initializer_list<T> initList) {
+    for (const auto& value : initList) {
+        push_back(value);
+    }
+}
+
+// конструктор инициализации списком + аллокатор
+template <typename T, typename Allocator>
+MyContainer<T, Allocator>::MyContainer(const std::initializer_list<T> initList,
+                                       const allocator_type& allocator)
+    : m_allocator(allocator) {
     for (const auto& value : initList) {
         push_back(value);
     }

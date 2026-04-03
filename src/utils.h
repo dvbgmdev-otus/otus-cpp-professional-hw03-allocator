@@ -13,6 +13,8 @@
 #include <list>
 #endif
 
+#include "my_container.h"
+
 int factorial(int value);
 
 // Функция для создания std::map с факториалами от 0 до itemCount - 1
@@ -61,6 +63,49 @@ void printMap(const std::map<Key, Value, Compare, Allocator>& map,
     }
     for (const auto& [key, value] : map) {
         os << key << " " << value << '\n';
+    }
+}
+
+// Функция для создания MyContainer со значениями от 0 до itemCount - 1
+template <typename Value, typename Allocator = std::allocator<Value>>
+MyContainer<Value, Allocator> createSequentialMyContainer(
+    std::size_t itemCount, const Allocator& allocator = Allocator()) {
+    MyContainer<Value, Allocator> result(allocator);
+    for (std::size_t i = 0; i < itemCount; ++i) {
+        result.push_back(static_cast<Value>(i));
+    }
+    return result;
+}
+
+// Функция для измерения времени создания N=repeatCount MyContainer со значениями от 0 до itemCount
+// - 1
+template <typename Value, typename Allocator = std::allocator<Value>>
+std::chrono::nanoseconds measureSequentialMyContainerCreationTime(std::size_t itemCount,
+                                                                  std::size_t repeatCount) {
+    std::size_t checksum = 0;
+    const auto start = std::chrono::steady_clock::now();
+    for (std::size_t i = 0; i < repeatCount; ++i) {
+        Allocator allocator{};  // Создаем новый аллокатор для каждой итерации
+        const auto tempContainer =
+            createSequentialMyContainer<Value, Allocator>(itemCount, allocator);
+        checksum +=
+            tempContainer.size();  // Используем размер контейнера для предотвращения оптимизации
+    }
+    const auto end = std::chrono::steady_clock::now();
+    (void)checksum;  // чтобы избежать предупреждения о неиспользуемой переменной
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+}
+
+// Функция для печати содержимого MyContainer
+template <typename Value, typename Allocator>
+void printMyContainer(const MyContainer<Value, Allocator>& container,
+                      std::ostream& os,
+                      const std::string& title = "") {
+    if (!title.empty()) {
+        os << title << '\n';
+    }
+    for (const auto& item : container) {
+        os << item << '\n';
     }
 }
 
